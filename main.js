@@ -1,5 +1,7 @@
 const ctx = document.getElementById("myChart").getContext("2d");
 
+let delayed;
+
 // Gradient Fill
 let gradient = ctx.createLinearGradient(0, 0, 0, 400);
 gradient.addColorStop(0, "rgba(58,123,213,1");
@@ -26,6 +28,7 @@ const data = {
         backgroundColor: gradient,
         borderColor: '#fff',
         pointBackgroundColor: 'rgb(189, 195, 199)',
+        tension: 0.4,
     },
  ],
 };
@@ -38,6 +41,18 @@ const config = {
         hitRadius: 30,
         hoverRadius: 10,
         responsive: true,
+        animation: {
+            onComplete: () => {
+                delayed = true;
+            },
+            delay: (context) => {
+                let delay = 0;
+                if(context.type === "data" && context.mode === "default" && !delayed){
+                    delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                }
+                return delay;
+            },
+        },
         scales: {
             y: {
                 ticks: {
